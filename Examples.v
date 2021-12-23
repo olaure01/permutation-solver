@@ -73,3 +73,28 @@ Proof.
   induction t; simpl; intuition (permutation_solver eq_dec).
 Qed.
 
+
+(** Uses of [map] and [rev] *)
+Goal forall (l0 l1 l2 l3 l4 l5 l6 l7 l8 : list A) n,
+  Permutation (l1 ++ l8) (l4 ++ l0) ->
+  Permutation l2 (l5 ++ n :: l3) ->
+  Permutation (l8 ++ l6) (l4 ++ l5) ->
+  Permutation l7 (rev l3 ++ rev l0) ->
+  Permutation (l1 ++ l2) (n :: l6 ++ rev l7).
+Proof. intros; permutation_solver eq_dec. Qed.
+
+Goal forall B (f : B -> A) l0 l1 l2 l3 l4 l5 l6 l7 l8 (n : A),
+  Permutation (l1 ++ l8) (l4 ++ map f l0) ->
+  Permutation l2 (l5 ++ n :: map f l3) ->
+  Permutation (l8 ++ l6) (l4 ++ l5) ->
+  Permutation (map f l7) (map f l0 ++ map f l3) ->
+  Permutation (l1 ++ l2) (n :: l6 ++ map f l7).
+Proof. intros; permutation_solver eq_dec. Qed.
+
+Goal forall B (f : B -> A) l0 l1 l2 l3 l4 l5 l6 l7 l8 (n : A),
+  Permutation (l1 ++ l8) (l4 ++ map f l0) ->
+  Permutation l2 (l5 ++ n :: map f l3) ->
+  Permutation (l8 ++ l6) (l4 ++ l5) ->
+  Permutation l7 (l0 ++ l3) ->
+  Permutation (l1 ++ l2) (n :: l6 ++ map f l7).
+Proof. intros; permutation_solver eq_dec. Qed.
