@@ -1,11 +1,6 @@
 From Coq Require Export List Permutation.
 From Coq Require Import Lia.
 
-(* TODO remove once in stdlib *)
-Lemma count_occ_rev [A] decA (l : list A) x : count_occ decA (rev l) x = count_occ decA l x.
-Proof.
-Admitted.
-
 #[local] Ltac isolate_singleton Hdec h :=
   let l := fresh "l" in
   let Heql := fresh "Heql" in
