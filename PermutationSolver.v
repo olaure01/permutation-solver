@@ -50,6 +50,13 @@ Ltac permutation_solver Hdec :=
   let z := fresh "z" in
   try (rewrite (Permutation_count_occ Hdec); intros z);
   repeat match goal with
-  | H : Permutation _ _ |- _ => rewrite (Permutation_count_occ Hdec) in H; specialize (H z)
+  | H : Permutation _ _ |- _ => rewrite (Permutation_count_occ Hdec) in H;
+     repeat match goal with
+     | Hs : count_occ Hdec ?l ?x = 1 |- _ => let Hx := fresh H x in assert (Hx := H x); symmetry in Hs
+     end;
+     try specialize (H z);
+     repeat match goal with
+     | Hs : 1 = count_occ Hdec _ _ |- _ => symmetry in Hs
+     end
   end;
   rewrite ? count_occ_app, ? count_occ_rev, ? count_occ_nil in *; lia.

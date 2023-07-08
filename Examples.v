@@ -98,3 +98,25 @@ Goal forall B (f : B -> A) l0 l1 l2 l3 l4 l5 l6 l7 l8 (n : A),
   Permutation l7 (l0 ++ l3) ->
   Permutation (l1 ++ l2) (n :: l6 ++ map f l7).
 Proof. intros; permutation_solver eq_dec. Qed.
+
+
+(** Cancelation *)
+
+Lemma Permutation_cancel (l1 l2 l l' : list A) :
+   Permutation (l1 ++ l) (l' ++ l2) -> Permutation l l' -> Permutation l1 l2.
+Proof. intros. permutation_solver eq_dec. Qed.
+
+Lemma Permutation_cancel_sgt (l1 l2 : list A) a : Permutation (l1 ++ [a]) (a :: l2) -> Permutation l1 l2.
+Proof. intros. permutation_solver eq_dec. Qed.
+
+
+(** Contradiction *)
+
+Goal forall (a : A) l, ~ Permutation (a :: l) (a :: l ++ a :: l).
+Proof. intros a l HP. permutation_solver eq_dec. Qed.
+
+Goal forall (a : A) l, ~ Permutation [a] (l ++ l).
+Proof. intros a l HP. permutation_solver eq_dec. Qed.
+
+Goal forall a (l l1 l2 : list A), Permutation [a] (l ++ l) -> Permutation l1 l2.
+Proof. intros. permutation_solver eq_dec. Qed.
