@@ -7,14 +7,14 @@ From Coq Require Import Lia.
   let Heq := fresh "Heq" in
   let Hc := fresh in
   remember (h :: nil) as l eqn:Heql;
-  assert (forall l', h :: l' = l ++ l') as Hc by (intros; rewrite Heql; cbn; reflexivity);
+  assert (forall l', h :: l' = l ++ l') as Hc by (intros; rewrite Heql; reflexivity);
   repeat match goal with
-  | |- context[h :: ?t] => rewrite_all (Hc t)
+  | |- context[h :: ?t] => rewrite ? (Hc t) in *
   | H : Permutation _ _ |- _ => match type of H with
-                                | context[h :: ?t] => rewrite_all (Hc t)
+                                | context[h :: ?t] => rewrite ? (Hc t) in *
                                 end
   end; clear Hc;
-  destruct (proj1 (@count_occ_sgt _ Hdec _ _) Heql) as [Heq _]; clear Heql.
+  destruct (proj1 (count_occ_sgt Hdec _ _) Heql) as [Heq _]; clear Heql.
 
 (* enrich Permutation hypotheses by applying [map f] *)
 #[local] Ltac mapify f :=
@@ -52,11 +52,12 @@ Ltac permutation_solver Hdec :=
   repeat match goal with
   | H : Permutation _ _ |- _ => rewrite (Permutation_count_occ Hdec) in H;
      repeat match goal with
-     | Hs : count_occ Hdec ?l ?x = 1 |- _ => let Hx := fresh H x in assert (Hx := H x); symmetry in Hs
+     | Hs : count_occ Hdec ?l ?x = 1 |- _ => let Hx := fresh H x in assert (Hx := H x);
+                                             symmetry in Hs (* hide Hs for loop "repeat match goal" *)
      end;
      try specialize (H z);
      repeat match goal with
-     | Hs : 1 = count_occ Hdec _ _ |- _ => symmetry in Hs
+     | Hs : 1 = count_occ Hdec _ _ |- _ => symmetry in Hs (* show back Hs for future loops *)
      end
   end;
   rewrite ? count_occ_app, ? count_occ_rev, ? count_occ_nil in *; lia.
