@@ -1,5 +1,5 @@
-From Coq Require Export List Permutation.
-From Coq Require Import Lia.
+From Stdlib Require Export List Permutation.
+From Stdlib Require Import Lia.
 
 #[local] Ltac isolate_singleton Hdec h :=
   let l := fresh "l" in
